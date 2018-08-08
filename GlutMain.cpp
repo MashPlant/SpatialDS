@@ -225,7 +225,7 @@ void on_key_down(unsigned char ch_key, int, int)
 					{ return SpatialDS<Point, ControlGroupTag>{}; }
 			};
 	int key = ch_key - '0';
-	if (key >= 0 && key <= sizeof(key_to_ds) / sizeof(key_to_ds[0]))
+	if (key >= 0 && key < sizeof(key_to_ds) / sizeof(key_to_ds[0]))
 		ds = key_to_ds[key](), ds_type = key;
 	std::visit([](auto &x)
 			   { x.add_points(point_entity.begin(), point_entity.end()); }, ds);

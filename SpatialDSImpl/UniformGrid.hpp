@@ -30,7 +30,7 @@ struct SpatialDS<T, UniformGridTag>
 
 	// well, I must write the init here
 	// otherwise g++ will ICE
-	SpatialDS() : inv_grid(0), bucket_num(1024), bucket(std::make_unique<std::vector<pointer>[]>(bucket_num))
+	SpatialDS() : inv_grid{0}, bucket_num{1024}, bucket{std::make_unique<std::vector<pointer>[]>(bucket_num)}
 	{}
 
 	template<typename InputIt>
