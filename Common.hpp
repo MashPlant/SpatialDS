@@ -7,8 +7,10 @@
 
 #include <cmath>
 #include <cassert>
+#include <cstdio>
 #include <cstring>
 #include <cstdlib>
+#include <cstdint>
 #include <algorithm>
 #include <type_traits>
 
@@ -20,5 +22,4 @@ namespace par = std;
 #endif
 
 using Float = float;
-
 #endif //SPATIALDS_COMMON_HPP

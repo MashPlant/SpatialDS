@@ -7,21 +7,23 @@
 
 #include "Shape.hpp"
 
-bool collision_circle_circle(const Shape &lhs, const Shape &rhs)
+#define P(x) (printf("%s=%d\n",#x,x), x)
+
+inline bool collision_circle_circle(const Shape &lhs, const Shape &rhs)
 {
 	const Circle &c1 = static_cast<const Circle &>(lhs),
 			&c2 = static_cast<const Circle &>(rhs);
 	return c1.c.dis2(c2.c) <= (c1.r + c2.r) * (c1.r + c2.r);
 }
 
-bool collision_circle_segment(const Shape &lhs, const Shape &rhs)
+inline bool collision_circle_segment(const Shape &lhs, const Shape &rhs)
 {
 	const Circle &c = static_cast<const Circle &>(lhs);
 	const Segment &s = static_cast<const Segment &>(rhs);
 	return s.distance(c.c) <= c.r;
 }
 
-bool collision_circle_triangle(const Shape &lhs, const Shape &rhs)
+inline bool collision_circle_triangle(const Shape &lhs, const Shape &rhs)
 {
 	const Circle &c = static_cast<const Circle &>(lhs);
 	const Triangle &t = static_cast<const Triangle &>(rhs);
@@ -31,21 +33,21 @@ bool collision_circle_triangle(const Shape &lhs, const Shape &rhs)
 		   || collision_circle_segment(c, Segment{t.p3, t.p1});
 }
 
-bool collision_segment_circle(const Shape &lhs, const Shape &rhs)
+inline bool collision_segment_circle(const Shape &lhs, const Shape &rhs)
 { return collision_circle_segment(rhs, lhs); }
 
-bool collision_segment_segment(const Shape &lhs, const Shape &rhs)
+inline bool collision_segment_segment(const Shape &lhs, const Shape &rhs)
 {
 	const Segment &s1 = static_cast<const Segment &>(lhs),
 			&s2 = static_cast<const Segment &>(rhs);
 	if (std::abs(Vec2::cross(s1.p2 - s1.p1, s2.p2 - s2.p1)) <= Shape::eps) // parallel
-		return Segment::contain(s1, s2.p1) || Segment::contain(s1, s2.p2)
-			   || Segment::contain(s2, s1.p1) || Segment::contain(s2, s1.p2);
+		return P(Segment::contain(s1, s2.p1) || Segment::contain(s1, s2.p2)
+			   || Segment::contain(s2, s1.p1) || Segment::contain(s2, s1.p2));
 	Vec2 intersect_pos = Segment::intersection(s1, s2); // not parallel, find intersection
-	return Segment::contain(s1, intersect_pos) && Segment::contain(s2, intersect_pos);
+	return P(Segment::contain(s1, intersect_pos) && Segment::contain(s2, intersect_pos));
 }
 
-bool collision_segment_triangle(const Shape &lhs, const Shape &rhs)
+inline bool collision_segment_triangle(const Shape &lhs, const Shape &rhs)
 {
 	const Segment &s = static_cast<const Segment &>(lhs);
 	const Triangle &t = static_cast<const Triangle &>(rhs);
@@ -56,13 +58,13 @@ bool collision_segment_triangle(const Shape &lhs, const Shape &rhs)
 		   || collision_segment_segment(s, Segment{t.p3, t.p1});
 }
 
-bool collision_triangle_circle(const Shape &lhs, const Shape &rhs)
+inline bool collision_triangle_circle(const Shape &lhs, const Shape &rhs)
 { return collision_circle_triangle(rhs, lhs); }
 
-bool collision_triangle_segment(const Shape &lhs, const Shape &rhs)
+inline bool collision_triangle_segment(const Shape &lhs, const Shape &rhs)
 { return collision_segment_triangle(rhs, lhs); }
 
-bool collision_triangle_triangle(const Shape &lhs, const Shape &rhs)
+inline bool collision_triangle_triangle(const Shape &lhs, const Shape &rhs)
 {
 	auto cross = [](const Triangle &t, Vec2 b, Vec2 c, Float normal)
 	{

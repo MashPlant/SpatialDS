@@ -15,3 +15,7 @@ And we will get two executable files. One is TestMain, for testing the correctne
 ```
 ./GlutMain --help
 ```
+
+# TODO
+The precision of float32 is really unacceptable in terms of collision detection between shapes...
+So maybe I will have to change all the api related to float

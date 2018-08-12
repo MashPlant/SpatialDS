@@ -16,13 +16,16 @@ struct Shape
 {
 	enum
 	{
-		circle = 0,
-		segment = 1,
-		triangle = 2,
-		undefined = 3,
-	} const type_code = undefined;
+		circle,
+		segment,
+		triangle,
+		undefined,
+	};
 
-	constexpr static Float eps = 1e-5;
+	const uint8_t type_code;
+	uint8_t collision_on;
+
+	constexpr static Float eps = 1e-3;
 
 	using check_collision_t = bool (*)(const Shape &, const Shape &);
 
@@ -36,6 +39,8 @@ struct Shape
 
 	using destruct_t = void (*)(Shape &);
 
+	using paint_t = void (*)(const Shape &);
+
 	const static check_collision_t check_collision_table[undefined][undefined];
 
 	const static radius_t radius_table[undefined];
@@ -48,17 +53,36 @@ struct Shape
 
 	const static destruct_t destruct_table[undefined];
 
-	static bool check_collision(const Shape &lhs, const Shape &rhs);
+	const static paint_t paint_table[undefined];
 
-	static Float radius(const Shape &shape);
+	template<typename Derived>
+	Derived *runtime_cast()
+	{ return type_code == Derived::type ? static_cast<Derived *>(this) : nullptr; }
 
-	static Vec2 position(const Shape &shape);
+	template<typename Derived>
+	const Derived *runtime_cast() const
+	{ return type_code == Derived::type ? static_cast<const Derived *>(this) : nullptr; }
 
-	static bool contain(const Shape &shape, Vec2 point);
+	bool check_collision(const Shape &rhs) const
+	{ check_collision_table[type_code][rhs.type_code](*this, rhs); }
 
-	static void update(Shape &shape, Vec2 delta);
+	Float radius() const
+	{ return radius_table[type_code](*this); }
 
-	static void destruct(Shape &shape);
+	Vec2 position() const
+	{ return position_table[type_code](*this); }
+
+	bool contain(Vec2 point) const
+	{ return contain_table[type_code](*this, point); }
+
+	void update(Vec2 delta)
+	{ update_table[type_code](*this, delta); }
+
+	void destruct()
+	{ destruct_table[type_code](*this); }
+
+	void paint() const
+	{ paint_table[type_code](*this); }
 };
 
 #include "Circle.hpp"
@@ -66,64 +90,53 @@ struct Shape
 #include "Triangle.hpp"
 #include "CollisionFunc.hpp"
 
-constexpr Shape::check_collision_t Shape::check_collision_table[undefined][undefined] =
+constexpr inline Shape::check_collision_t Shape::check_collision_table[undefined][undefined] =
 		{
 				[circle] = {[circle] = collision_circle_circle, [segment] = collision_circle_segment, [triangle] = collision_circle_triangle,},
 				[segment] = {[circle] = collision_segment_circle, [segment] = collision_segment_segment, [triangle] = collision_segment_triangle,},
 				[triangle] = {[circle] = collision_triangle_circle, [segment] = collision_triangle_segment, [triangle] = collision_triangle_triangle,},
 		};
 
-constexpr Shape::radius_t Shape::radius_table[undefined] =
+constexpr inline Shape::radius_t Shape::radius_table[undefined] =
 		{
 				[circle] = Circle::radius,
 				[segment] = Segment::radius,
 				[triangle] = Triangle::radius,
 		};
 
-constexpr Shape::position_t Shape::position_table[undefined] =
+constexpr inline Shape::position_t Shape::position_table[undefined] =
 		{
 				[circle] = Circle::position,
 				[segment] = Segment::position,
 				[triangle] = Triangle::position,
 		};
 
-constexpr Shape::contain_t Shape::contain_table[undefined] =
+constexpr inline Shape::contain_t Shape::contain_table[undefined] =
 		{
 				[circle] = Circle::contain,
 				[segment] = Segment::contain,
 				[triangle] = Triangle::contain,
 		};
 
-constexpr Shape::update_t Shape::update_table[undefined] =
+constexpr inline Shape::update_t Shape::update_table[undefined] =
 		{
 				[circle] = Circle::update,
 				[segment] = Segment::update,
 				[triangle] = Triangle::update,
 		};
 
-constexpr Shape::destruct_t Shape::destruct_table[undefined] =
+constexpr inline Shape::destruct_t Shape::destruct_table[undefined] =
 		{
 				[circle] = Circle::destruct,
 				[segment] = Segment::destruct,
 				[triangle] = Triangle::destruct,
 		};
 
-bool Shape::check_collision(const Shape &lhs, const Shape &rhs)
-{ return check_collision_table[lhs.type_code][rhs.type_code](lhs, rhs); }
-
-Float Shape::radius(const Shape &shape)
-{ return radius_table[shape.type_code](shape); }
-
-Vec2 Shape::position(const Shape &shape)
-{ return position_table[shape.type_code](shape); }
-
-bool Shape::contain(const Shape &shape, Vec2 point)
-{ return contain_table[shape.type_code](shape, point); }
-
-void Shape::update(Shape &shape, Vec2 delta)
-{ return update_table[shape.type_code](shape, delta); }
-
-void Shape::destruct(Shape &shape)
-{ return destruct_table[shape.type_code](shape); }
+constexpr inline Shape::paint_t Shape::paint_table[undefined] =
+		{
+				[circle] = Circle::paint,
+				[segment] = Segment::paint,
+				[triangle] = Triangle::paint,
+		};
 
 #endif //SPATIALDS_SHAPE_HPP

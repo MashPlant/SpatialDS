@@ -9,6 +9,8 @@
 
 struct Triangle : Shape
 {
+	const static int type = triangle;
+
 	Vec2 p1, p2, p3;
 	Vec2 c;
 	Float r; // save the center & radius of circumscribed circle
@@ -51,6 +53,8 @@ struct Triangle : Shape
 
 	static void destruct(Shape &)
 	{}
+
+	static void paint(const Shape&);
 };
 
 #endif //SPATIALDS_TRIANGLE_HPP

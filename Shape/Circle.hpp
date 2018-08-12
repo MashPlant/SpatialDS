@@ -9,6 +9,8 @@
 
 struct Circle : Shape
 {
+	const static int type = circle;
+
 	Vec2 c;
 	Float r;
 
@@ -35,6 +37,8 @@ struct Circle : Shape
 
 	static void destruct(Shape &)
 	{}
+
+	static void paint(const Shape&);
 };
 
 #endif //SPATIALDS_CIRCLE_HPP

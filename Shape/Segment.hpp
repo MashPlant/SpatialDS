@@ -9,6 +9,8 @@
 
 struct Segment : Shape
 {
+	const static int type = segment;
+
 	Vec2 p1, p2;
 
 	static Vec2 intersection(const Segment &s1, const Segment &s2)
@@ -38,7 +40,7 @@ struct Segment : Shape
 	static Float radius(const Shape &shape)
 	{
 		const Segment &segment = static_cast<const Segment &>(shape);
-		return segment.p1.dis(segment.p2);
+		return segment.p1.dis(segment.p2) * 0.5;
 	}
 
 	static Vec2 position(const Shape &shape)
@@ -62,6 +64,8 @@ struct Segment : Shape
 
 	static void destruct(Shape &)
 	{}
+
+	static void paint(const Shape &);
 };
 
 #endif //SPATIALDS_SEGMENT_HPP

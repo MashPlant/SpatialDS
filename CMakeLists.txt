@@ -16,6 +16,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
 
 add_executable(TestMain TestMain.cpp Vec.hpp Common.hpp Point.hpp SpatialDS.hpp SpatialDSImpl/KDTree.hpp SpatialDSImpl/Brute.hpp SpatialDSImpl/SortSweep.hpp SpatialDSImpl/PowSplitTree.hpp SpatialDSImpl/UniformGrid.hpp SpatialDSImpl/ControlGroup.hpp)
 
-add_executable(GlutMain GlutMain.cpp Vec.hpp Common.hpp Point.hpp SpatialDS.hpp SpatialDSImpl/KDTree.hpp SpatialDSImpl/Brute.hpp SpatialDSImpl/SortSweep.hpp SpatialDSImpl/PowSplitTree.hpp SpatialDSImpl/UniformGrid.hpp SpatialDSImpl/ControlGroup.hpp CmdLine/CmdLine.hpp Shape/Shape.hpp Shape/Circle.hpp Shape/CollisionFunc.hpp Shape/Segment.hpp Shape/Triangle.hpp CmdLine/CmdLine.cpp)
+add_executable(GlutMain GlutMain.cpp Vec.hpp Common.hpp Point.hpp SpatialDS.hpp SpatialDSImpl/KDTree.hpp SpatialDSImpl/Brute.hpp SpatialDSImpl/SortSweep.hpp SpatialDSImpl/PowSplitTree.hpp SpatialDSImpl/UniformGrid.hpp SpatialDSImpl/ControlGroup.hpp CmdLine/CmdLine.hpp CmdLine/CmdLine.cpp)
 
-target_link_libraries (GlutMain glut GLU GL)
+add_executable(ShapeMain ShapeMain.cpp Vec.hpp Common.hpp Point.hpp SpatialDS.hpp SpatialDSImpl/KDTree.hpp SpatialDSImpl/Brute.hpp SpatialDSImpl/SortSweep.hpp SpatialDSImpl/PowSplitTree.hpp SpatialDSImpl/UniformGrid.hpp SpatialDSImpl/ControlGroup.hpp CmdLine/CmdLine.hpp Shape/Shape.hpp Shape/Circle.hpp Shape/CollisionFunc.hpp Shape/Segment.hpp Shape/Triangle.hpp Shape/PaintFunc.cpp)
+
+target_link_libraries(GlutMain glut GLU GL)
+target_link_libraries(ShapeMain glut GLU GL)

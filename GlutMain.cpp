@@ -50,7 +50,7 @@
 #include "SpatialDSImpl/SortSweep.hpp"
 #include "SpatialDSImpl/UniformGrid.hpp"
 #include "SpatialDSImpl/ControlGroup.hpp"
-
+#include "Shape/Shape.hpp"
 #include "CmdLine/CmdLine.hpp"
 
 using Point = Point3;
@@ -102,7 +102,6 @@ void on_size_change(GLsizei w, GLsizei h)
 void init()
 {
 	srand(19260817);
-	using trait = PointTraits<Point>;
 	for (int _ = 0; _ < N; ++_)
 		point_entity.push_back(Point(Vec::rand([=]()
 											   { return rand_float(min_pos, max_pos); }),
@@ -140,7 +139,6 @@ void on_render()
 
 	glRotatef(rotate_x, 1.0f, 0.0f, 0.0f), rotate_x = 0;
 	glRotatef(rotate_y, 0.0f, 1.0f, 0.0f), rotate_y = 0;
-
 	for (auto &p : point_entity)
 	{
 		glPushMatrix();
